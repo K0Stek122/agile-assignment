@@ -21,7 +21,7 @@ def run_cli():
 
 def run_gui():
     app = wx.App()
-    gui = WelcomeGUI("Hello World!")
+    gui = WelcomeGUI()
     gui.Show(True)
     app.MainLoop()
 
