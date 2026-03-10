@@ -1,6 +1,6 @@
 import argparse
 from sqlite import SQLite
-from ui import Gui
+from ui import WelcomeGUI
 import wx
 
 db_conn = None
@@ -13,7 +13,7 @@ def setup_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 def setup_database():
-    db_conn = SQLite("db")
+    db_conn = SQLite("db.db")
     db_conn.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, Name TEXT)")
 
 def run_cli():
@@ -21,7 +21,7 @@ def run_cli():
 
 def run_gui():
     app = wx.App()
-    gui = Gui("Hello World!")
+    gui = WelcomeGUI("Hello World!")
     gui.Show(True)
     app.MainLoop()
 
