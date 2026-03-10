@@ -7,5 +7,8 @@ class SQLite:
         self.cursor = self.conn.cursor()
 
     def execute(self, command : str):
-        self.cursor.execute(command)
-        return self.cursor.fetchall()
+        try:
+            self.cursor.execute(command)
+            return self.cursor.fetchall()
+        except sqlite3.OperationalError as e:
+            return f"sqlite3.OperationalError:  {e}"

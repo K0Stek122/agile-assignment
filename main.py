@@ -1,5 +1,7 @@
 import argparse
 from sqlite import SQLite
+from ui import Gui
+import wx
 
 db_conn = None
 
@@ -15,10 +17,18 @@ def setup_database():
     db_conn.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, Name TEXT)")
 
 def run_cli():
-    db_conn = SQLite("db")
-    db_conn.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, Name TEXT)")
+    pass
+
+def run_gui():
+    app = wx.App()
+    gui = Gui("Hello World!")
+    gui.Show(True)
+    app.MainLoop()
 
 if __name__ == "__main__":
     args = setup_arguments() 
+    setup_database()
     if args.mode == 'cli':
         run_cli()
+    else:
+        run_gui()
