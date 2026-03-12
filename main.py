@@ -6,6 +6,11 @@ import wx
 db_conn = None
 
 def setup_arguments() -> argparse.Namespace:
+    """uses argparse to setup command-line arguments.
+
+    Returns:
+        argparse.Namespace: parsed command line arguments, access with parser.parse_args().mode
+    """
     parser = argparse.ArgumentParser(prog="agile-assignment", description="App for gym membership management.")
     
     parser.add_argument('mode', choices=['cli', 'gui'], help="Run the app in CLI or GUI mode.")
