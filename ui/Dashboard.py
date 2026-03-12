@@ -1,6 +1,6 @@
 
 from ui.Base import BaseUI
-from ui.BookSession import BookSessionUI
+from ui.SessionManagement import SessionManagementUI
 from ui.MembershipManagement import MembershipManagementUI
 from ui.ParkingManagement import ParkingManagement
 
@@ -33,7 +33,7 @@ class UserDashboardUI(BaseUI):
         self.next_gui = ParkingManagement(self.user_id)
         self.next_gui.Show()
     def __e_BookASessionPressed(self, event):
-        self.next_gui = BookSessionUI(self.user_id)
+        self.next_gui = SessionManagementUI(self.user_id)
         self.next_gui.Show()
     def __e_DeleteAccountPressed(self, event):
         pass
