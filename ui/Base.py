@@ -3,12 +3,20 @@ import wx.adv
 
 class BaseUI(wx.Frame):
     def __init__(self, title):
+        """BaseUI class that uses wxWidgets and simple wrappers to create beautiful and quick UIs
+
+        Args:
+            title (str): Title of the window to display.
+        """
+
         super().__init__(parent=None,
                          title=title,
                          size=(100, 100),
                          style=wx.DEFAULT_FRAME_STYLE ^ wx.RESIZE_BORDER)
 
     def _StartGridBuild(self):
+        """Needs to be called in every child class's __def__ along with _EndGridBuild to handle building the UI.
+        """
         self.panel = wx.Panel(self)
         self.grid = wx.GridBagSizer(vgap=10, hgap=10)
         
@@ -16,11 +24,25 @@ class BaseUI(wx.Frame):
         self.__next_row = 0
 
     def _NextRow(self) -> int:
+        """Gets the next row that a widget can be put into if pos is not specified
+
+        Returns:
+            int: next available row
+        """
         row = self.__next_row
         self.__next_row += 1
         return row
     
     def __ResolvePosition(self, pos : tuple[int, int], span: tuple[int, int]):
+        """Resolves the position of the next row that a widget can be put into if pos is not specified
+
+        Args:
+            pos (tuple[int, int]): The position that user specified
+            span (tuple[int, int]): The span that user specifies, otherwise defaults to (1, 1)
+
+        Returns:
+            tuple[int, int]: The next available position
+        """
         if pos is None:
             return (self._NextRow(), 0)
         # Keep cursor in sync when a manual pos is used
@@ -28,6 +50,8 @@ class BaseUI(wx.Frame):
         return pos
 
     def _EndGridBuild(self):
+        """Ends grid building. handles panel, grid, and frame sizer logic + centres the window on the screen.
+        """
         self.panel.SetSizerAndFit(self.grid)
         frame_sizer = wx.BoxSizer(wx.VERTICAL)
         frame_sizer.Add(self.panel, 0, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL, 15)

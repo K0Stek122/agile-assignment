@@ -1,6 +1,11 @@
 from ui.Base import BaseUI
 
 class BookSessionUI(BaseUI):
+    """UI for booking sessions.
+
+    Args:
+        BaseUI (class): Base class for building wxWidget uis.
+    """
     def __init__(self, user_id):
         super().__init__("GymPro: Book")
         self.user_id = user_id

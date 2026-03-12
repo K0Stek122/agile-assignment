@@ -13,6 +13,11 @@ from .Base import BaseUI
     
 # PARENT ROOT GUI
 class WelcomeUI(BaseUI):
+    """Root UI that leads to every other UI
+
+    Args:
+        BaseUI (class): BaseUI framework for building quick and beautiful UIs with wxWidgets.
+    """
     def __init__(self):
         # ^ is the Bitwise XOR operation. By XORing default frame style with resizing we remove resizing.
         super().__init__("GymPro: Welcome")
