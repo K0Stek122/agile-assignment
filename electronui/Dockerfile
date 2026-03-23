@@ -4,6 +4,8 @@ WORKDIR /app
 
 RUN pnpm install
 RUN pnpm install react-router-dom
+RUN pnpm install electron --save-dev
+RUN pnpm install electron-builder --save-dev
 
 EXPOSE 5173
 

@@ -1,9 +1,13 @@
 {
+  "main" : "main.ts",
+
   "name": "electron_ui",
   "private": true,
   "version": "0.0.1",
   "type": "module",
   "scripts": {
+    "electron": "electron .",
+    "build-electron": "electron-builder",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
@@ -40,5 +44,20 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.57.1",
     "vite": "^7.3.1"
+  },
+  
+  "build": {
+    "appId": "com.agile.app",
+    "productName": "AgileApp",
+    "files": [
+      "main.ts",
+      "dist/**/*"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   }
 }
