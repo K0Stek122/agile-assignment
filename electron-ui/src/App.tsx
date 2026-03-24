@@ -8,7 +8,7 @@ function Authenticate() {
   const navigate = useNavigate()
   return (
     <main className="flex min-h-svh w-full items-center justify-center px-4 py-8">
-      <Card className="w-full max-w-md shadow-lg">
+      <Card className="login-card-enter w-full max-w-md shadow-lg">
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
           <CardDescription>

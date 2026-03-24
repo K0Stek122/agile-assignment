@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
     Sidebar,
@@ -12,20 +12,48 @@ import {
     SidebarMenuItem,
 } from './ui/sidebar';
 
-import { CalendarClockIcon, CarFrontIcon, HouseIcon, IdCardIcon, LogOutIcon, Settings2Icon, ShieldCheckIcon } from 'lucide-react'
+import { CalendarClockIcon, CarFrontIcon, HouseIcon, IdCardIcon, LogOutIcon, MoonIcon, Settings2Icon, ShieldCheckIcon, SunIcon } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
+
+type SidebarWrapperProps = {
+  title?: string
+  children?: React.ReactNode
+}
 
 const navigationItems = [
-  { title: 'Home', href: '/', icon: HouseIcon },
+  { title: 'Home', href: '/home', icon: HouseIcon },
   { title: 'Membership', href: '/membership', icon: IdCardIcon },
   { title: 'Parking', href: '/parking', icon: CarFrontIcon },
   { title: 'Sessions', href: '/sessions', icon: CalendarClockIcon },
   { title: 'Account Options', href: '/account-options', icon: Settings2Icon },
-  { title: 'Log Out', href: '/login', icon: LogOutIcon },
+  { title: 'Log Out', href: '/', icon: LogOutIcon },
 ]
 
-export const SidebarWrapper: React.FC = () => {
+export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({
+  title = 'Home',
+  children,
+}) => {
   const location = useLocation()
+  const [isDark, setIsDark] = useState(false)
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme')
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const shouldUseDark = savedTheme ? savedTheme === 'dark' : prefersDark
+
+    document.documentElement.classList.toggle('dark', shouldUseDark)
+    setIsDark(shouldUseDark)
+  }, [])
+
+  const toggleTheme = () => {
+    setIsDark((currentValue) => {
+      const nextValue = !currentValue
+      document.documentElement.classList.toggle('dark', nextValue)
+      localStorage.setItem('theme', nextValue ? 'dark' : 'light')
+      return nextValue
+    })
+  }
 
   return (
         <div className="flex flex-row">
@@ -49,7 +77,7 @@ export const SidebarWrapper: React.FC = () => {
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton
                         render={<Link to={item.href} />}
-                        isActive={location.pathname === item.href || (item.href === '/' && location.pathname === '/')}
+                        isActive={location.pathname === item.href}
                       >
                         <item.icon />
                         <span>{item.title}</span>
@@ -61,9 +89,20 @@ export const SidebarWrapper: React.FC = () => {
             </SidebarContent>
 
             <SidebarFooter className="border-t border-sidebar-border p-4">
-              <div className="rounded-md bg-sidebar-accent/60 px-3 py-2">
-                <p className="text-xs text-sidebar-foreground/70">Signed in as</p>
-                <p className="text-sm font-medium">Alex Johnson</p>
+              <div className="flex items-center gap-2">
+                <div className="flex-1 rounded-md bg-sidebar-accent/60 px-3 py-2">
+                  <p className="text-xs text-sidebar-foreground/70">Signed in as</p>
+                  <p className="text-sm font-medium">Alex Johnson</p>
+                </div>
+                <Button
+                  size="icon"
+                  variant="outline"
+                  aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                  onClick={toggleTheme}
+                  className="shrink-0 hover:cursor-pointer"
+                >
+                  {isDark ? <SunIcon /> : <MoonIcon />}
+                </Button>
               </div>
             </SidebarFooter>
           </Sidebar>
@@ -71,12 +110,14 @@ export const SidebarWrapper: React.FC = () => {
           <SidebarInset className="min-h-svh w-full bg-background">
             <div className="flex h-full flex-col">
               <header className="border-b border-border px-6 py-5">
-                <h1 className="text-2xl font-semibold tracking-tight">Home</h1>
+                <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
               </header>
               <main className="flex-1 px-6 py-6">
-                <div className="rounded-xl border border-dashed border-border bg-muted/40 p-8 text-sm text-muted-foreground">
-                  Main dashboard content goes here.
-                </div>
+                {children ?? (
+                  <div className="rounded-xl border border-dashed border-border bg-muted/40 p-8 text-sm text-muted-foreground">
+                    Main dashboard content goes here.
+                  </div>
+                )}
               </main>
             </div>
           </SidebarInset>
