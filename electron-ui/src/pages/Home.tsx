@@ -13,14 +13,6 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { SidebarWrapper } from '../components/sidebar-wrapper'
 
-const navigationItems = [
-  { title: 'Home', href: '/', icon: HouseIcon },
-  { title: 'Membership', href: '/membership', icon: IdCardIcon },
-  { title: 'Parking', href: '/parking', icon: CarFrontIcon },
-  { title: 'Sessions', href: '/sessions', icon: CalendarClockIcon },
-  { title: 'Account Options', href: '/account-options', icon: Settings2Icon },
-  { title: 'Log Out', href: '/login', icon: LogOutIcon },
-]
 
 
 function Home() {

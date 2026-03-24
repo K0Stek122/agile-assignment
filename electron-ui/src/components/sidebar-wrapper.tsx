@@ -12,18 +12,19 @@ import {
     SidebarMenuItem,
 } from './ui/sidebar';
 
-import { ShieldCheckIcon } from 'lucide-react'
+import { CalendarClockIcon, CarFrontIcon, HouseIcon, IdCardIcon, LogOutIcon, Settings2Icon, ShieldCheckIcon } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 
-interface SidebarWrapperProps {
-  navigationItems?: {
-    title: string
-    href: string
-    icon: React.ComponentType<any>
-  }[]
-}
+const navigationItems = [
+  { title: 'Home', href: '/', icon: HouseIcon },
+  { title: 'Membership', href: '/membership', icon: IdCardIcon },
+  { title: 'Parking', href: '/parking', icon: CarFrontIcon },
+  { title: 'Sessions', href: '/sessions', icon: CalendarClockIcon },
+  { title: 'Account Options', href: '/account-options', icon: Settings2Icon },
+  { title: 'Log Out', href: '/login', icon: LogOutIcon },
+]
 
-export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({ navigationItems = [] }) => {
+export const SidebarWrapper: React.FC = () => {
   const location = useLocation()
 
   return (

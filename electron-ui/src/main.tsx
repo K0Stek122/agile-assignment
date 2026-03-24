@@ -5,6 +5,10 @@ import Home from '../src/pages/Home.tsx';
 import './index.css'
 import { SidebarProvider } from './components/ui/sidebar.tsx'
 import Authenticate from './App.tsx'
+import AccountOptions from './pages/AccountOptions.tsx'
+import Sessions from './pages/Sessions.tsx'
+import Membership from './pages/Membership.tsx';
+import Parking from './pages/Parking.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -12,8 +16,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <SidebarProvider>
         <Routes>
           <Route path="/" element={<Authenticate />} />
-          <Route path="/membership" element={<div>Membership Page</div>} />
+          <Route path="/membership" element={<Membership />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/parking" element={<Parking />} />
+          <Route path="/sessions" element={<Sessions />} />
+          <Route path="/account-options" element={<AccountOptions />} />
         </Routes>
       </SidebarProvider>
     </HashRouter>
