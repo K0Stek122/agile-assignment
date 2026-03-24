@@ -11,11 +11,10 @@ import {
 import { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
-import { useNavigate } from 'react-router-dom'
 import { SidebarWrapper } from './components/sidebar-wrapper'
 
 const navigationItems = [
-  { title: 'Home', href: '#', icon: HouseIcon },
+  { title: 'Home', href: '/', icon: HouseIcon },
   { title: 'Membership', href: '/membership', icon: IdCardIcon },
   { title: 'Parking', href: '/parking', icon: CarFrontIcon },
   { title: 'Sessions', href: '/sessions', icon: CalendarClockIcon },
@@ -45,7 +44,7 @@ function App() {
   }
 
   return (
-    <>
+    <div>
       <SidebarWrapper navigationItems={navigationItems} />
 
       <Button
@@ -57,7 +56,7 @@ function App() {
       >
         {isDark ? <SunIcon /> : <MoonIcon />}
       </Button>
-    </>
+    </div>
   )
 }
 

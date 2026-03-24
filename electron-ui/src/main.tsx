@@ -11,6 +11,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <SidebarProvider>
         <Routes>
           <Route path="/" element={<App />} />
+          <Route path="/membership" element={<div>Membership Page</div>} />
         </Routes>
       </SidebarProvider>
     </HashRouter>

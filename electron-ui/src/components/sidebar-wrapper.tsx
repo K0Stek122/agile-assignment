@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 import {
     Sidebar,
@@ -12,21 +12,22 @@ import {
     SidebarMenuItem,
 } from './ui/sidebar';
 
-import { ShieldCheckIcon } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { ShieldCheckIcon } from 'lucide-react'
+import { Link, useLocation } from 'react-router-dom'
 
 interface SidebarWrapperProps {
-    navigationItems?: {
-        title: string;
-        href: string;
-        icon: React.ComponentType<any>;
-    }[];
+  navigationItems?: {
+    title: string
+    href: string
+    icon: React.ComponentType<any>
+  }[]
 }
 
 export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({ navigationItems = [] }) => {
-    const navigate = useNavigate();
-    return (
-        <>
+  const location = useLocation()
+
+  return (
+        <div className="flex flex-row">
           <Sidebar collapsible="none" className="border-r border-sidebar-border h-screen">
             <SidebarHeader className="px-4 py-5">
               <div className="flex items-center gap-3">
@@ -43,9 +44,12 @@ export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({ navigationItems 
             <SidebarContent>
               <SidebarGroup className="px-3 py-2">
                 <SidebarMenu>
-                  {navigationItems.map((item, index) => (
+                  {navigationItems.map((item) => (
                     <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton render={<a href={item.href} />} isActive={index === 0} onClick={() => navigate(item.href)}>
+                      <SidebarMenuButton
+                        render={<Link to={item.href} />}
+                        isActive={location.pathname === item.href || (item.href === '/' && location.pathname === '/')}
+                      >
                         <item.icon />
                         <span>{item.title}</span>
                       </SidebarMenuButton>
@@ -75,6 +79,6 @@ export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({ navigationItems 
               </main>
             </div>
           </SidebarInset>
-        </>
-    );
-};
+        </div>
+      )
+    }
