@@ -123,11 +123,11 @@ export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({
           </Sidebar>
 
           <SidebarInset className="min-h-svh w-full bg-background">
-            <div className="flex h-full flex-col">
+            <div className="flex min-h-svh flex-col w-screen h-screen overflow-x-hidden">
               <header className="border-b border-border px-6 py-5">
                 <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
               </header>
-              <main className="flex-1 px-6 py-6">
+              <main className="min-h-0 flex-1 overflow-auto px-6 py-6">
                 {children ?? (
                   <div className="rounded-xl border border-dashed border-border bg-muted/40 p-8 text-sm text-muted-foreground">
                     Main dashboard content goes here.
