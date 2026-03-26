@@ -221,3 +221,4 @@ electron-ui/.env.test
 electron-ui/.env.production
 electron-ui/release/
 electron-ui/dist-electron/
+*.db

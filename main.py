@@ -1,11 +1,16 @@
 import argparse
 from sqlite import SQLite
-from ui import Gui
+from ui.Welcome import WelcomeUI
 import wx
 
 db_conn = None
 
 def setup_arguments() -> argparse.Namespace:
+    """uses argparse to setup command-line arguments.
+
+    Returns:
+        argparse.Namespace: parsed command line arguments, access with parser.parse_args().mode
+    """
     parser = argparse.ArgumentParser(prog="agile-assignment", description="App for gym membership management.")
     
     parser.add_argument('mode', choices=['cli', 'gui'], help="Run the app in CLI or GUI mode.")
@@ -13,7 +18,7 @@ def setup_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 def setup_database():
-    db_conn = SQLite("db")
+    db_conn = SQLite("db.db")
     db_conn.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, Name TEXT)")
 
 def run_cli():
@@ -21,7 +26,7 @@ def run_cli():
 
 def run_gui():
     app = wx.App()
-    gui = Gui("Hello World!")
+    gui = WelcomeUI()
     gui.Show(True)
     app.MainLoop()
 
