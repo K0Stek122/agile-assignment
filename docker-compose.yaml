@@ -38,6 +38,8 @@ services:
     container_name: db
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
@@ -50,7 +52,30 @@ services:
     restart: unless-stopped
     networks:
       - gym-pro
+  db-api:
+    build:
+      context: db
+      dockerfile: Dockerfile
+    container_name: db-api
+    ports:
+      - "5431:5431"
+    environment:
+      POSTGRES_USER: api
+      POSTGRES_PASSWORD: CoolPass321
+      POSTGRES_DB: gym_pro
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "api"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - gym-pro
 
 networks:
   gym-pro:
     name: gym-pro
+
+volumes:
+  postgres_data:
+    name: postgres_data
