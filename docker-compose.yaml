@@ -1,0 +1,18 @@
+services:
+  ui-dev:
+    build: electron-ui/
+    container_name: ui-dev
+    ports:
+      - "5174:5174"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5174/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - gym-pro
+
+networks:
+  gym-pro:
+    name: gym-pro
