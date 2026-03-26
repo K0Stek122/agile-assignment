@@ -25,7 +25,27 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5173/"]
       interval: 30s
-      tmeout: 10s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - gym-pro
+
+  db:
+    build:
+      context: db
+      dockerfile: Dockerfile
+    container_name: db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: gym_pro
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 30s
+      timeout: 10s
       retries: 3
     restart: unless-stopped
     networks:
