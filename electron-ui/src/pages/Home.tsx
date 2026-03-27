@@ -1,4 +1,4 @@
-import { Area, AreaChart, CartesianGrid, PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { SidebarWrapper } from '../components/sidebar-wrapper'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
