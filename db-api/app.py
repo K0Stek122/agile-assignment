@@ -30,6 +30,8 @@ def db_healthcheck():
 @app.route('/api/get-user/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     conn = get_db_connection()
+    if not conn:
+        return 'Failed to connect to the database', 500
     cur = conn.cursor()
     cur.execute('SELECT * FROM User WHERE [User ID] = %s', (user_id,))
     
@@ -49,6 +51,29 @@ def get_user(user_id):
         }, 200
     else:
         return 'User not found', 404
+
+@app.route('/api/create-user', methods=['POST'])
+def create_user():
+    data = request.get_json()
+    username = data.get('username')
+    user_type = data.get('user_type')
+    email = data.get('email')
+    phone_number = data.get('phone_number')
+    membership_type = data.get('membership_type')
+
+    conn = get_db_connection()
+    if not conn:
+        return 'Failed to connect to the database', 500
+    cur = conn.cursor()
+    cur.execute('INSERT INTO User (username, user_type, email, phone_number, membership_type) VALUES (%s, %s, %s, %s, %s) RETURNING [User ID]',
+                (username, user_type, email, phone_number, membership_type))
+    
+    user_id = cur.fetchone()[0]
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    return {'user_id': user_id}, 201
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5431)
