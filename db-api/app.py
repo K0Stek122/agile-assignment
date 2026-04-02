@@ -81,7 +81,7 @@ def get_user_by_email(email):
     if not conn:
         return 'Failed to connect to the database', 500
     cur = conn.cursor()
-    cur.execute('SELECT * FROM User WHERE email = %s', (email,))
+    cur.execute('SELECT * FROM User WHERE [Email] = %s', (email,))
     
     user = cur.fetchone()
     cur.close()
@@ -97,6 +97,26 @@ def get_user_by_email(email):
         }, 200
     else:
         return 'User not found', 404
+
+@app.route('/api/raw-query', methods=['POST'])
+def raw_query():
+    data = request.get_json()
+    query = data.get("query")
+    if not query:
+        return 'No query provided', 400
+    conn = get_db_connection()
+
+    if not conn:
+        return 'Failed to connect to the database', 500
+    cur = conn.cursor()
+    cur.execute(query)
+    data = cur.fetchall()
+    cur.close()
+    conn.close()
+    if data:
+        return {
+            'data' : data
+        }, 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5431)
