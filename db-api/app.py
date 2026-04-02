@@ -75,5 +75,28 @@ def create_user():
 
     return {'user_id': user_id}, 201
 
+@app.route('/api/get-user-by-email/<string:email>', methods=['GET'])
+def get_user_by_email(email):
+    conn = get_db_connection()
+    if not conn:
+        return 'Failed to connect to the database', 500
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM User WHERE email = %s', (email,))
+    
+    user = cur.fetchone()
+    cur.close()
+    conn.close()
+    if user:
+        return {
+            'user_id': user[0],
+            'username': user[1],
+            'user_type': user[2],
+            'email': user[3],
+            'phone_number': user[4],
+            'membership_type': user[5]
+        }, 200
+    else:
+        return 'User not found', 404
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5431)
