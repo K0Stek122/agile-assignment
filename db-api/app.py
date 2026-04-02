@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 import psycopg2
 import os
 
@@ -31,21 +31,24 @@ def db_healthcheck():
 def get_user(user_id):
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute('SELECT * FROM Users WHERE id = %s', (user_id,))
+    cur.execute('SELECT * FROM User WHERE [User ID] = %s', (user_id,))
     
     # Jsonify the result and return it
     user = cur.fetchone()
     cur.close()
     conn.close()
     if user:
+        # Return a json of the user
         return {
-            'id': user[0],
-            'name': user[1],
-            'email': user[2]
+            'user_id': user[0],
+            'username': user[1],
+            'user_type': user[2],
+            'email': user[3],
+            'phone_number': user[4],
+            'membership_type': user[5]
         }, 200
     else:
         return 'User not found', 404
-    pass
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5431)
