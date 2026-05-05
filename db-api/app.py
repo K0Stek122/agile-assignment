@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 import psycopg2
 import os
 
@@ -56,14 +56,19 @@ def create_user():
     name = request.form.get('name')
     user_type = request.form.get('user_type')
     email = request.form.get('email')
-    phone_number = request.form.get('form_number')
+    phone_number = request.form.get('phone_number')
     membership_type = request.form.get('membership_type')
 
     conn = get_db_connection()
     if not conn:
         return 'DB failure', 500
     cur = conn.cursor()
-    cur.execute('INSERT INTO Users ("User name", "User type", "Email", "Phone number", "Membership type") VALUES (%s, %s, %s, %s, %s)', name, user_type, email, phone_number, membership_type)
+
+    cur.execute('INSERT INTO Users ("User name", "User type", "Email", "Phone number", "Membership type") VALUES (%s, %s, %s, %s, %s)', (name, user_type, email, phone_number, membership_type))
+    conn.commit()
+
+    cur.close()
+    conn.close()
 
 
 if __name__ == '__main__':
