@@ -108,5 +108,99 @@ def insert_schedule_item():
 
     return 'Queried successfully', 200
 
+@app.route('/api/insert-parking-item', methods=['POST'])
+def insert_parking_item():
+    user_id = request.form.get('user_id')
+    license_plate = request.form.get('license_plate')
+    payment = request.form.get('payment')
+    start_timestamp = request.form.get('start_timestamp')
+    end_timestamp = request.form.get('end_timestamp')
+
+    conn = get_db_connection()
+    if not conn:
+        return 'DB failure', 500
+    cur = conn.cursor()
+
+    cur.execute(
+        'INSERT INTO "Parking" ("User ID", "License plate", "Payment", "Start timestamp", "End timestamp") VALUES (%s, %s, %s, %s, %s)',
+        (user_id, license_plate, payment, start_timestamp, end_timestamp)
+    )
+    conn.commit()
+
+    cur.close()
+    conn.close()
+
+    return 'Parking item inserted', 200
+
+
+@app.route('/api/get-parking/<int:user_id>', methods=['GET'])
+def get_parking_by_user_id(user_id):
+    conn = get_db_connection()
+    if not conn:
+        return 'DB failure', 500
+    cur = conn.cursor()
+
+    cur.execute('SELECT * FROM "Parking" WHERE "User ID" = %s', (user_id,))
+    rows = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return [{
+        'parking_id': row[0],
+        'user_id': row[1],
+        'license_plate': row[2],
+        'payment': row[3],
+        'start_timestamp': row[4],
+        'end_timestamp': row[5]
+    } for row in rows], 200
+
+
+@app.route('/api/insert-credit-card', methods=['POST'])
+def insert_credit_card():
+    user_id = request.form.get('user_id')
+    card_number = request.form.get('card_number')
+    expiry = request.form.get('expiry')
+    cvc = request.form.get('cvc')
+
+    conn = get_db_connection()
+    if not conn:
+        return 'DB failure', 500
+    cur = conn.cursor()
+
+    cur.execute(
+        'INSERT INTO "Credit Card Information" ("User ID", "Card number", "Expiry", "CVC") VALUES (%s, %s, %s, %s)',
+        (user_id, card_number, expiry, cvc)
+    )
+    conn.commit()
+
+    cur.close()
+    conn.close()
+
+    return 'Credit card inserted', 200
+
+
+@app.route('/api/get-credit-card/<int:user_id>', methods=['GET'])
+def get_credit_card_by_user_id(user_id):
+    conn = get_db_connection()
+    if not conn:
+        return 'DB failure', 500
+    cur = conn.cursor()
+
+    cur.execute('SELECT * FROM "Credit Card Information" WHERE "User ID" = %s', (user_id,))
+    rows = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return [{
+        'credit_card_id': row[0],
+        'user_id': row[1],
+        'card_number': row[2],
+        'expiry': row[3],
+        'cvc': row[4]
+    } for row in rows], 200
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5431)
