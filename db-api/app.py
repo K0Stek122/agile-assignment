@@ -201,6 +201,24 @@ def get_credit_card_by_user_id(user_id):
         'cvc': row[4]
     } for row in rows], 200
 
+@app.route('/api/db-api/delete-user/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    conn = get_db_connection()
+    if not conn:
+        return 'DB failure', 500
+    cur = conn.cursor()
+    cur.execute('DELETE FROM "User" WHERE "User ID" = %s', (user_id,))
+    conn.commit()
+
+    rows_deleted = cur.rowcount
+
+    cur.close()
+    conn.close()
+
+    if rows_deleted == 0:
+        return 'User not found', 404
+    return 'User deleted', 200
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5431)
