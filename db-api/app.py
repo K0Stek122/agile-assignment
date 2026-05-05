@@ -72,6 +72,41 @@ def create_user():
 
     return 'User inserted', 200
 
+@app.route('/api/get-schedule', methods=['GET'])
+def get_schedule():
+    conn = get_db_connection()
+    if not conn:
+        return 'DB failure', 500
+
+    cur = conn.cursor()
+    
+    cur.execute('SELECT * FROM Schedule')
+    schedule = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return schedule, 200
+
+@app.route('/api/insert-schedule-item', methods=['POST'])
+def insert_schedule_item():
+    user_id = request.form.get('user_id')
+    trainer_id = request.form.get('trainer_id')
+    date = request.form.get('date')
+
+    conn = get_db_connection()
+    if not conn:
+        return 'DB failure', 500
+
+    cur = conn.cursor()
+
+    cur.execute("INSERT INTO Schedule ('User ID (member)', 'User ID (trainer)', 'Date/time')")
+    conn.commit()
+
+    cur.close()
+    conn.close()
+
+    return 'Queried successfully', 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5431)
