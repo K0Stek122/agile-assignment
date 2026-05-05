@@ -80,7 +80,7 @@ def get_schedule():
 
     cur = conn.cursor()
     
-    cur.execute('SELECT * FROM Schedule')
+    cur.execute('SELECT * FROM "Schedule"')
     schedule = cur.fetchall()
 
     cur.close()
