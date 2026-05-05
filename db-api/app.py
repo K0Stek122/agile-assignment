@@ -33,7 +33,7 @@ def get_user(user_id):
     if not conn:
         return 'DB failure', 500
     cur = conn.cursor()
-    cur.execute('SELECT * FROM Users WHERE id = %s', (user_id,))
+    cur.execute('SELECT * FROM "User" WHERE "User ID" = %s', (user_id,))
     
     # Jsonify the result and return it
     user = cur.fetchone()
@@ -64,7 +64,7 @@ def create_user():
         return 'DB failure', 500
     cur = conn.cursor()
 
-    cur.execute('INSERT INTO Users ("User name", "User type", "Email", "Phone number", "Membership type") VALUES (%s, %s, %s, %s, %s)', (name, user_type, email, phone_number, membership_type))
+    cur.execute('INSERT INTO "User" ("User name", "User type", "Email", "Phone number", "Membership type") VALUES (%s, %s, %s, %s, %s)', (name, user_type, email, phone_number, membership_type))
     conn.commit()
 
     cur.close()
