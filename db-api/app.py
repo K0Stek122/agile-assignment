@@ -51,5 +51,20 @@ def get_user(user_id):
     else:
         return 'User not found', 404
 
+@app.route('/api/create-user', methods=['POST'])
+def create_user():
+    name = request.form.get('name')
+    user_type = request.form.get('user_type')
+    email = request.form.get('email')
+    phone_number = request.form.get('form_number')
+    membership_type = request.form.get('membership_type')
+
+    conn = get_db_connection()
+    if not conn:
+        return 'DB failure', 500
+    cur = conn.cursor()
+    cur.execute('INSERT INTO Users ("User name", "User type", "Email", "Phone number", "Membership type") VALUES (%s, %s, %s, %s, %s)', name, user_type, email, phone_number, membership_type)
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5431)
