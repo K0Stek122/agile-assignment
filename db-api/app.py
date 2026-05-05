@@ -100,7 +100,7 @@ def insert_schedule_item():
 
     cur = conn.cursor()
 
-    cur.execute("INSERT INTO Schedule ('User ID (member)', 'User ID (trainer)', 'Date/time')")
+    cur.execute('INSERT INTO "Schedule" ("User ID (member)", "User ID (trainer)", "Date/time") VALUES (%s, %s, %s)', (user_id, trainer_id, date))
     conn.commit()
 
     cur.close()
