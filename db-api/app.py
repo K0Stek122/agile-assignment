@@ -30,6 +30,8 @@ def db_healthcheck():
 @app.route('/api/get-user/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     conn = get_db_connection()
+    if not conn:
+        return 'DB failure', 500
     cur = conn.cursor()
     cur.execute('SELECT * FROM Users WHERE id = %s', (user_id,))
     
@@ -41,11 +43,13 @@ def get_user(user_id):
         return {
             'id': user[0],
             'name': user[1],
-            'email': user[2]
+            'type': user[2],
+            'email': user[3],
+            'phone_number': user[4],
+            'membership_type': user[5]
         }, 200
     else:
         return 'User not found', 404
-    pass
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5431)
