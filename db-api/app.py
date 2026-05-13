@@ -180,7 +180,7 @@ def insert_credit_card():
     return 'Credit card inserted', 200
 
 
-@app.route('/api/db-api/get-credit-card/<int:user_id>', methods=['GET'])
+@app.route('/api/db-api/get-credit-card/<iS/nt:user_id>', methods=['GET'])
 def get_credit_card_by_user_id(user_id):
     conn = get_db_connection()
     if not conn:
