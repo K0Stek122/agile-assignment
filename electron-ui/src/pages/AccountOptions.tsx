@@ -17,6 +17,59 @@ function AccountOptions() {
     const navigate = useNavigate()
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [dataLoading, setDataLoading] = useState(false)
+    const [dataError, setDataError] = useState<string | null>(null)
+
+    const handleRequestData = async () => {
+        if (!userId) return
+        setDataLoading(true)
+        setDataError(null)
+        try {
+            const [nameRes, typeRes, emailRes, phoneRes, membershipRes] = await Promise.all([
+                fetch(`/api/account-mgmt/get-user-name/${userId}`),
+                fetch(`/api/account-mgmt/get-user-type/${userId}`),
+                fetch(`/api/account-mgmt/get-user-email/${userId}`),
+                fetch(`/api/account-mgmt/get-user-phone-number/${userId}`),
+                fetch(`/api/account-mgmt/get-user-membership-type/${userId}`),
+            ])
+
+            if (!nameRes.ok || !typeRes.ok || !emailRes.ok || !phoneRes.ok || !membershipRes.ok) {
+                setDataError('Failed to fetch account data. Please try again.')
+                return
+            }
+
+            const [name, type, email, phone, membership] = await Promise.all([
+                nameRes.json(),
+                typeRes.json(),
+                emailRes.json(),
+                phoneRes.json(),
+                membershipRes.json(),
+            ])
+
+            const txt = [
+                'GymPro Account Data Export',
+                `Generated: ${new Date().toLocaleString()}`,
+                '',
+                `Name:             ${name.name}`,
+                `Account Type:     ${type.type}`,
+                `Email:            ${email.email}`,
+                `Phone Number:     ${phone.phone_number}`,
+                `Membership Type:  ${membership.membership_type}`,
+            ].join('\n')
+
+            const blob = new Blob([txt], { type: 'text/plain' })
+            const url = URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = `gympro-account-${userId}.txt`
+            a.click()
+            URL.revokeObjectURL(url)
+        } catch {
+            setDataError('Could not reach the server. Please try again.')
+        } finally {
+            setDataLoading(false)
+        }
+    }
 
     const handleDeleteConfirm = async () => {
         if (!userId) return
@@ -36,7 +89,10 @@ function AccountOptions() {
     return (
         <SidebarWrapper title="Account Options">
             <div className="flex flex-col gap-4 p-8 login-card-enter">
-                <Button variant="default" className="w-1/4">Request your Data</Button>
+                <Button variant="default" className="w-1/4" onClick={handleRequestData} disabled={dataLoading}>
+                    {dataLoading ? 'Fetching...' : 'Request your Data'}
+                </Button>
+                {dataError && <p className="text-sm text-destructive">{dataError}</p>}
                 <Button variant="destructive" className="w-1/4" onClick={() => setIsDialogOpen(true)}>
                     Delete Account
                 </Button>
