@@ -58,7 +58,7 @@ export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({
   }
 
   return (
-        <div className="flex flex-row">
+        <div className="flex flex-row w-full">
           <Sidebar variant="floating" collapsible="icon" className="border-r border-sidebar-border h-screen">
             <SidebarHeader className="px-4 py-5 flex items-center justify-between">
               {open && (
@@ -123,7 +123,7 @@ export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({
           </Sidebar>
 
           <SidebarInset className="min-h-svh w-full bg-background">
-            <div className="flex min-h-svh flex-col w-screen h-screen overflow-x-hidden">
+            <div className="flex min-h-svh flex-col w-full h-screen overflow-x-hidden">
               <header className="border-b border-border px-6 py-5">
                 <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
               </header>

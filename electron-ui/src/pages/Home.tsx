@@ -15,51 +15,57 @@ const attendanceData = [
 function Home() {
   return (
     <SidebarWrapper title="Home">
-      <div className="flex flex-row gap-6 login-card-enter">
-        <Card className="w-1/2 shadow-lg">
-          <CardHeader>
-            <CardTitle>Your Attendance</CardTitle>
-            <CardDescription>Your Attendance by month.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-80">
-              <ResponsiveContainer width="100%" >
-                <AreaChart data={attendanceData} margin={{ top: 8, right: 12, left: 0, bottom: 8 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" tickMargin={8} height={42} />
-                  <YAxis dataKey="count" />
-                  <Tooltip />
-                  <Area type="monotone" dataKey="count" stroke="#8884d8" fill="#8884d8" />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-        
-        {/* Shadcn Radar Chart with the same data */}
-        <Card className="w-1/4 shadow-lg">
-          <CardHeader>
-            <CardTitle>Your Attendance</CardTitle>
-            <CardDescription>Your Attendance by month.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-80">
-              <ResponsiveContainer width="100%" >
-                <RadarChart data={attendanceData} outerRadius="75%">
-                  <PolarGrid />
-                  <PolarAngleAxis dataKey="month" />
-                  <Tooltip />
-                  <Radar
-                    dataKey="count"
-                    stroke="#8884d8"
-                    fill="#8884d8"
-                    fillOpacity={0.5}
-                  />
-                </RadarChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="flex flex-col gap-8 login-card-enter">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-7xl font-bold tracking-tight">GymPro</h1>
+          <p className="text-xl text-muted-foreground">Ready to start your training?</p>
+        </div>
+
+        <div className="flex flex-row gap-6 w-full">
+          <Card className="flex-1 shadow-lg">
+            <CardHeader>
+              <CardTitle>Your Attendance</CardTitle>
+              <CardDescription>Your Attendance by month.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="h-80">
+                <ResponsiveContainer width="100%">
+                  <AreaChart data={attendanceData} margin={{ top: 8, right: 12, left: 0, bottom: 8 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" tickMargin={8} height={42} />
+                    <YAxis dataKey="count" />
+                    <Tooltip />
+                    <Area type="monotone" dataKey="count" stroke="#8884d8" fill="#8884d8" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="w-1/3 shadow-lg">
+            <CardHeader>
+              <CardTitle>Your Attendance</CardTitle>
+              <CardDescription>Your Attendance by month.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="h-80">
+                <ResponsiveContainer width="100%">
+                  <RadarChart data={attendanceData} outerRadius="75%">
+                    <PolarGrid />
+                    <PolarAngleAxis dataKey="month" />
+                    <Tooltip />
+                    <Radar
+                      dataKey="count"
+                      stroke="#8884d8"
+                      fill="#8884d8"
+                      fillOpacity={0.5}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </SidebarWrapper>
   )
