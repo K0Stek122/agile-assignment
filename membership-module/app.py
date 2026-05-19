@@ -1,17 +1,29 @@
-from flask import Flask
-import urllib.request
+from flask import Flask, request
+import requests
 
 app = Flask(__name__)
 
 @app.route('/api/get-membership-status/<int:member_id>', methods=['GET'])
 def get_membership_status(member_id):
-    # TODO: implement proper database and check if member_id is valid
-    # send request to db-api to get user info and return membership status based on that
-    contents = urllib.request.urlopen(f"http://db-api:5431/api/get-user/{member_id}").read()
-    if contents:
+    response = requests.get(f"http://db-api:5431/api/db-api/get-user/{member_id}")
+    if response.status_code == 200:
         return 'Active', 200
-    else:
-        return 'Inactive', 200
+    return 'Inactive', 200
+
+@app.route('/api/change-user-membership', methods=['POST'])
+def change_user_membership():
+    data = request.get_json()
+    user_id = data.get("user_id")
+    new_membership_status = data.get("new_membership_status")
+
+    response = requests.post(
+        f"http://db-api:5431/api/db-api/update-user-membership/{user_id}",
+        data={'membership_type': new_membership_status}
+    )
+    if response.status_code != 200:
+        return response.text, response.status_code
+    return 'Membership updated', 200
+
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5430)
+    app.run(host='0.0.0.0', port=5211)

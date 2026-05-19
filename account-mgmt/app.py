@@ -29,7 +29,7 @@ def get_user_email(user_id):
     return {'email': response.json()['email']}, 200
 
 @app.route('/api/account-mgmt/get-user-phone-number/<int:user_id>')
-def get_user_type(user_id):
+def get_user_phone_number(user_id):
     response = requests.get(f"http://db-api:5431/api/db-api/get-user/{user_id}")
     if response.status_code != 200:
         return response.text, response.status_code
@@ -50,4 +50,4 @@ def delete_user(user_id):
     return 'User deleted', 200
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5432)
+    app.run(host='0.0.0.0', port=5320)

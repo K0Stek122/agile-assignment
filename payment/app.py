@@ -5,7 +5,8 @@ import psycopg2
 
 app = Flask(__name__)
 
-DB_API_INTERNAL = os.getenv('DB_API_INTERNAL', 'http://localhost:5431')
+DB_API_INTERNAL = os.getenv('DB_API_INTERNAL', 'http://db-api:5431')
+MEMBERSHIP_MODULE = os.getenv('MEMBERSHIP_MODULE', 'http://membership-module:5211')
 
 MEMBERSHIP_PRICES = {
     'Standard': '20.00',
@@ -81,7 +82,7 @@ def _fetch_stored_cards(user_id):
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute(
-            'SELECT id, "Card number", "Expiry", "CVC" FROM "Credit Card Information" WHERE "User ID" = %s',
+            'SELECT "CreditCardID", "Card number", "Expiry", "CVC" FROM "Credit Card Information" WHERE "User ID" = %s',
             (user_id,)
         )
         rows = cur.fetchall()
@@ -108,7 +109,7 @@ def _store_card(user_id, card_number, expiry, cvc):
     try:
         response = requests.post(
             f'{DB_API_INTERNAL}/api/db-api/insert-credit-card',
-            json={
+            data={
                 'user_id': user_id,
                 'card_number': card_number,
                 'expiry': expiry,
@@ -134,22 +135,16 @@ def _store_card(user_id, card_number, expiry, cvc):
 
 def _update_membership(user_id, new_membership):
     try:
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute(
-            'UPDATE "User" SET "Membership type" = %s WHERE "User ID" = %s',
-            (new_membership, user_id)
+        response = requests.post(
+            f'{MEMBERSHIP_MODULE}/api/change-user-membership',
+            json={'user_id': user_id, 'new_membership_status': new_membership},
+            timeout=5
         )
-        conn.commit()
+        if response.status_code != 200:
+            return False, (jsonify({'error': 'Membership update failed', 'details': response.text}), 502)
         return True, None
-    except Exception as e:
-        return False, (jsonify({'error': 'Failed to update membership', 'details': str(e)}), 500)
-    finally:
-        try:
-            cur.close()
-            conn.close()
-        except:
-            pass
+    except requests.RequestException as e:
+        return False, (jsonify({'error': 'Failed to contact membership-module', 'details': str(e)}), 502)
 
 
 def _validate_card_input(card_number, expiry, cvc):

@@ -1,20 +1,4 @@
 services:
-  ui-dev:
-    build:
-      context: electron-ui
-      dockerfile: Dockerfile.dev
-    container_name: ui-dev
-    ports:
-      - "5173:5173"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5173/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    restart: unless-stopped
-    networks:
-      - gym-pro
-      
   ui-prod:
     build:
       context: electron-ui
@@ -80,10 +64,55 @@ services:
       dockerfile: Dockerfile
     container_name: account-mgmt
     ports:
-      - "5432:5432"
+      - "5320:5320"
     restart: unless-stopped
     networks:
       - gym-pro
+
+  parking:
+    build:
+      context: parking
+      dockerfile: Dockerfile
+    container_name: parking
+    ports:
+      - "5428:5428"
+    restart: unless-stopped
+    networks:
+      - gym-pro
+
+  payment:
+    build:
+      context: payment
+      dockerfile: Dockerfile
+    container_name: payment
+    ports:
+      - "5427:5427"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: CoolPass321
+      DB_NAME: gym_pro
+      DB_API_INTERNAL: http://db-api:5431
+      MEMBERSHIP_MODULE: http://membership-module:5211
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - gym-pro
+
+  membership-module:
+    build:
+      context: membership-module
+      dockerfile: Dockerfile
+    container_name: membership-module
+    ports:
+      - "5211:5211"
+    restart: unless-stopped
+    networks:
+      - gym-pro
+
 
 networks:
   gym-pro:

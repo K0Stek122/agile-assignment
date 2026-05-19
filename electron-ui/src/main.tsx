@@ -9,21 +9,24 @@ import AccountOptions from './pages/AccountOptions.tsx'
 import Sessions from './pages/Sessions.tsx'
 import Membership from './pages/Membership.tsx';
 import Parking from './pages/Parking.tsx';
+import { UserProvider } from './context/user-context.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <HashRouter>
-      <SidebarProvider>
-        <Routes>
-          <Route path="/" element={<Authenticate />} />
-          <Route path="/membership" element={<Membership />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/parking" element={<Parking />} />
-          <Route path="/sessions" element={<Sessions />} />
-          <Route path="/account-options" element={<AccountOptions />} />
-        </Routes>
-      </SidebarProvider>
-    </HashRouter>
+    <UserProvider>
+      <HashRouter>
+        <SidebarProvider>
+          <Routes>
+            <Route path="/" element={<Authenticate />} />
+            <Route path="/membership" element={<Membership />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/parking" element={<Parking />} />
+            <Route path="/sessions" element={<Sessions />} />
+            <Route path="/account-options" element={<AccountOptions />} />
+          </Routes>
+        </SidebarProvider>
+      </HashRouter>
+    </UserProvider>
   </React.StrictMode>,
 )
 

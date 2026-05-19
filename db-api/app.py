@@ -204,7 +204,7 @@ def insert_credit_card():
     return 'Credit card inserted', 200
 
 
-@app.route('/api/db-api/get-credit-card/<iS/nt:user_id>', methods=['GET'])
+@app.route('/api/db-api/get-credit-card/<int:user_id>', methods=['GET'])
 def get_credit_card_by_user_id(user_id):
     conn = get_db_connection()
     if not conn:
@@ -225,6 +225,26 @@ def get_credit_card_by_user_id(user_id):
         'cvc': row[4]
     } for row in rows], 200
 
+@app.route('/api/db-api/update-user-membership/<int:user_id>', methods=['POST'])
+def update_user_membership(user_id):
+    membership_type = request.form.get('membership_type')
+
+    conn = get_db_connection()
+    if not conn:
+        return 'DB failure', 500
+    cur = conn.cursor()
+    cur.execute('UPDATE "User" SET "Membership type" = %s WHERE "User ID" = %s', (membership_type, user_id))
+    conn.commit()
+
+    rows_updated = cur.rowcount
+    cur.close()
+    conn.close()
+
+    if rows_updated == 0:
+        return 'User not found', 404
+    return 'Membership updated', 200
+
+
 @app.route('/api/db-api/delete-user/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
     conn = get_db_connection()
@@ -243,6 +263,30 @@ def delete_user(user_id):
         return 'User not found', 404
     return 'User deleted', 200
 
+
+@app.route('/api/db-api/create-debug-user', methods=['GET'])
+def create_debug_user():
+    conn = get_db_connection()
+    if not conn:
+        return 'DB failure', 500
+    cur = conn.cursor()
+
+    cur.execute('SELECT "User ID" FROM "User" WHERE "User name" = %s', ('debug_user',))
+    existing = cur.fetchone()
+    if existing:
+        cur.close()
+        conn.close()
+        return {'id': existing[0]}, 200
+
+    cur.execute(
+        'INSERT INTO "User" ("User name", "User type", "Email", "Phone number", "Membership type") VALUES (%s, %s, %s, %s, %s) RETURNING "User ID"',
+        ('debug_user', 'member', 'debug@gympro.com', '0000000000', 'Standard')
+    )
+    user_id = cur.fetchone()[0]
+    conn.commit()
+    cur.close()
+    conn.close()
+    return {'id': user_id}, 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5431)
