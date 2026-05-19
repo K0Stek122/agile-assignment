@@ -1,20 +1,4 @@
 services:
-  ui-dev:
-    build:
-      context: electron-ui
-      dockerfile: Dockerfile.dev
-    container_name: ui-dev
-    ports:
-      - "5173:5173"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5173/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    restart: unless-stopped
-    networks:
-      - gym-pro
-      
   ui-prod:
     build:
       context: electron-ui
@@ -90,7 +74,8 @@ services:
       context: parking
       dockerfile: Dockerfile
     container_name: parking
-    ports: "5428:5428"
+    ports:
+      - "5428:5428"
     restart: unless-stopped
     networks:
       - gym-pro
@@ -100,7 +85,8 @@ services:
       context: membership-module
       dockerfile: Dockerfile
     container_name: membership-module
-    ports: "5211:5211"
+    ports:
+      - "5211:5211"
     restart: unless-stopped
     networks:
       - gym-pro
