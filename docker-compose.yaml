@@ -85,6 +85,17 @@ services:
     networks:
       - gym-pro
 
+  parking:
+    build:
+      context: parking
+      dockerfile: Dockerfile
+    container_name: parking
+    ports: "5428:5428"
+    restart: unless-stopped
+    networks:
+      - gym-pro
+
+
 networks:
   gym-pro:
     name: gym-pro
