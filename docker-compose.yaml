@@ -80,7 +80,7 @@ services:
       dockerfile: Dockerfile
     container_name: account-mgmt
     ports:
-      - "5432:5432"
+      - "5320:5320"
     restart: unless-stopped
     networks:
       - gym-pro
