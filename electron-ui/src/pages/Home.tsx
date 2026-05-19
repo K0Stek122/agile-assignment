@@ -1,18 +1,36 @@
+import { useState, useEffect } from 'react';
 import { Area, AreaChart, CartesianGrid, PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { SidebarWrapper } from '../components/sidebar-wrapper'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useUser } from '@/context/user-context';
 
-// Placeholder data for attendance records.
-// Area chart with X axis = count, Y axis = month
-const attendanceData = [
-  { month: 'January', count: 20 },
-  { month: 'February', count: 35 },
-  { month: 'March', count: 25 },
-  { month: 'April', count: 40 },
-  { month: 'May', count: 30 },
-];
+const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December']
+
+type AttendanceEntry = { month: string; count: number }
 
 function Home() {
+  const { userId } = useUser()
+  const [attendanceData, setAttendanceData] = useState<AttendanceEntry[]>([])
+
+  useEffect(() => {
+    fetch('/api/db-api/get-schedule')
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then((rows: [number, number, number, string][]) => {
+        const userSessions = rows.filter(row => row[1] === userId)
+        const counts: Record<number, number> = {}
+        for (const row of userSessions) {
+          const month = new Date(row[3]).getMonth()
+          counts[month] = (counts[month] ?? 0) + 1
+        }
+        setAttendanceData(
+          Object.entries(counts)
+            .sort(([a], [b]) => Number(a) - Number(b))
+            .map(([idx, count]) => ({ month: MONTH_NAMES[Number(idx)], count }))
+        )
+      })
+      .catch(() => {})
+  }, [userId])
+
   return (
     <SidebarWrapper title="Home">
       <div className="flex flex-col gap-8 login-card-enter">

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useUser } from '@/context/user-context'
 
 import {
     Sidebar,
@@ -37,7 +38,16 @@ export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({
 }) => {
   const location = useLocation()
   const { toggleSidebar, open } = useSidebar()
+  const { userId } = useUser()
   const [isDark, setIsDark] = useState(false)
+  const [userName, setUserName] = useState('...')
+
+  useEffect(() => {
+    fetch(`/api/db-api/get-user/${userId}`)
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(data => setUserName(data.name))
+      .catch(() => setUserName('Unknown'))
+  }, [userId])
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme')
@@ -106,7 +116,7 @@ export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({
                 <div className="flex items-center gap-2">
                   <div className="flex-1 rounded-md bg-sidebar-accent/60 px-3 py-2">
                     <p className="text-xs text-sidebar-foreground/70">Signed in as</p>
-                    <p className="text-sm font-medium">Alex Johnson</p>
+                    <p className="text-sm font-medium">{userName}</p>
                   </div>
                   <Button
                     size="icon"

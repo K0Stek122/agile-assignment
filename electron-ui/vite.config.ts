@@ -14,6 +14,12 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, 'src'),
       },
     },
+    server: {
+      proxy: {
+        '/api/db-api': { target: 'http://localhost:5431', changeOrigin: true },
+        '/api/account-mgmt': { target: 'http://localhost:5432', changeOrigin: true },
+      },
+    },
     plugins: [
       tailwindcss(),
       react(),
