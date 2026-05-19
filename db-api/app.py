@@ -244,5 +244,19 @@ def delete_user(user_id):
     return 'User deleted', 200
 
 
+@app.route('/api/db-api/create-debug-user', methods=['GET'])
+def create_debug_user():
+    conn = get_db_connection()
+    if not conn:
+        return 'DB failure', 500
+    cur = conn.cursor()
+    cur.execute('INSERT INTO "User')
+    conn.commit()
+
+    rows_deleted = cur.rowcount
+
+    cur.close()
+    conn.close()
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5431)

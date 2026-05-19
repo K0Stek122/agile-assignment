@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SidebarWrapper } from '@/components/sidebar-wrapper';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,9 +11,19 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useUser } from '@/context/user-context';
 
 export default function Membership() {
+    const { userId } = useUser()
     const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [membershipType, setMembershipType] = useState<string | null>(null)
+
+    useEffect(() => {
+        fetch(`/api/db-api/get-user/${userId}`)
+            .then(r => r.ok ? r.json() : Promise.reject())
+            .then(data => setMembershipType(data.membership_type))
+            .catch(() => setMembershipType('Unknown'))
+    }, [userId])
 
     // Placeholder for payment processing integration.
     const handleProceed = () => {
@@ -34,7 +44,7 @@ export default function Membership() {
         <SidebarWrapper title="Membership">
             <div className="p-8 flex flex-col gap-4 login-card-enter">
                 <h1 className="text-3xl font-bold mb-4">Change or Cancel Membership</h1>
-                <p>Current Membership Status: </p>
+                <p>Current Membership Status: <span className="font-semibold">{membershipType ?? '...'}</span></p>
                 <Button className="w-3/5" variant="default" onClick={handleMembershipActionClick}>Change to Standard</Button>
                 <Button className="w-3/5" variant="default" onClick={handleMembershipActionClick}>Change to Pro</Button>
                 <Button className="w-3/5" variant="default" onClick={handleMembershipActionClick}>Change to Pro+</Button>

@@ -95,6 +95,16 @@ services:
     networks:
       - gym-pro
 
+  membership-module:
+    build:
+      context: membership-module
+      dockerfile: Dockerfile
+    container_name: membership-module
+    ports: "5211:5211"
+    restart: unless-stopped
+    networks:
+      - gym-pro
+
 
 networks:
   gym-pro:
