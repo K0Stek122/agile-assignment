@@ -5,9 +5,9 @@ services:
       dockerfile: Dockerfile.prod
     container_name: ui-prod
     ports:
-      - "5173:5173"
+      - "5173:80"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5173/"]
+      test: ["CMD", "curl", "-f", "http://localhost:80/"]
       interval: 30s
       timeout: 10s
       retries: 3
