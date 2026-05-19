@@ -16,6 +16,7 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       proxy: {
+        '/api/db-api/pay': { target: 'http://localhost:5427', changeOrigin: true },
         '/api/db-api': { target: 'http://localhost:5431', changeOrigin: true },
         '/api/account-mgmt': { target: 'http://localhost:5320', changeOrigin: true },
         '/api/': { target: 'http://localhost:5211', changeOrigin: true },
