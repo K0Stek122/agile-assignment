@@ -17,7 +17,8 @@ def get_db_connection():
         password=os.getenv('DB_PASSWORD', 'CoolPass321')
     )
 
-@app.route('/api/db-api/db-healthcheck', methods=['GET'])
+
+@app.route('/api/db-healthcheck', methods=['GET'])
 def db_healthcheck():
     # Open postgres connection and check if it's alive
     try:
@@ -37,8 +38,6 @@ def get_user(user_id):
     
     # Jsonify the result and return it
     user = cur.fetchone()
-    cur.close()
-    conn.close()
     if user:
         return {
             'id': user[0],
@@ -50,6 +49,31 @@ def get_user(user_id):
         }, 200
     else:
         return 'User not found', 404
+
+@app.route('/api/get-license-plate/<int:user_id>', methods=['GET'])
+def get_licenseplate(user_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT Parking."User ID" FROM Parking WHERE id = %s', (user_id))
+    
+    # Jsonify the result and return it
+    user = cur.fetchone()
+    if user:
+        cur.execute('SELECT * FROM Users WHERE id = %s', (user,))
+        user = cur.fetchone()
+        return {
+            'id': user[0],
+            'name': user[1],
+            'type': user[2],
+            'email': user[3],
+            'phone_number': user[4],
+            'membership_type': user[5]
+        }, 200
+    else:
+        return 'User not found', 404
+    
+    cur.close()
+    conn.close()
 
 @app.route('/api/db-api/create-user', methods=['POST'])
 def create_user():
@@ -180,7 +204,7 @@ def insert_credit_card():
     return 'Credit card inserted', 200
 
 
-@app.route('/api/db-api/get-credit-card/<int:user_id>', methods=['GET'])
+@app.route('/api/db-api/get-credit-card/<iS/nt:user_id>', methods=['GET'])
 def get_credit_card_by_user_id(user_id):
     conn = get_db_connection()
     if not conn:
