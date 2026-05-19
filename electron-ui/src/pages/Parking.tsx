@@ -24,6 +24,7 @@ function Parking() {
     const [error, setError] = useState<string | null>(null)
 
     const fetchRecords = useCallback(() => {
+        if (!userId) return
         fetch(`/api/db-api/get-parking/${userId}`)
             .then(r => r.ok ? r.json() : Promise.reject())
             .then(setRecords)
@@ -34,6 +35,7 @@ function Parking() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        if (!userId) return
         setError(null)
 
         const body = new FormData()

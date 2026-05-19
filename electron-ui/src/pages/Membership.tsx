@@ -19,6 +19,7 @@ export default function Membership() {
     const [membershipType, setMembershipType] = useState<string | null>(null)
 
     useEffect(() => {
+        if (!userId) return
         fetch(`/api/db-api/get-user/${userId}`)
             .then(r => r.ok ? r.json() : Promise.reject())
             .then(data => setMembershipType(data.membership_type))

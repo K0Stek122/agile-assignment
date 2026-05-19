@@ -250,13 +250,23 @@ def create_debug_user():
     if not conn:
         return 'DB failure', 500
     cur = conn.cursor()
-    cur.execute('INSERT INTO "User')
+
+    cur.execute('SELECT "User ID" FROM "User" WHERE "User name" = %s', ('debug_user',))
+    existing = cur.fetchone()
+    if existing:
+        cur.close()
+        conn.close()
+        return {'id': existing[0]}, 200
+
+    cur.execute(
+        'INSERT INTO "User" ("User name", "User type", "Email", "Phone number", "Membership type") VALUES (%s, %s, %s, %s, %s) RETURNING "User ID"',
+        ('debug_user', 'member', 'debug@gympro.com', '0000000000', 'Standard')
+    )
+    user_id = cur.fetchone()[0]
     conn.commit()
-
-    rows_deleted = cur.rowcount
-
     cur.close()
     conn.close()
+    return {'id': user_id}, 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5431)

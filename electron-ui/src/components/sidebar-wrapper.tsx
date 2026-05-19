@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useUser } from '@/context/user-context'
 
+
 import {
     Sidebar,
     SidebarContent,
@@ -38,11 +39,12 @@ export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({
 }) => {
   const location = useLocation()
   const { toggleSidebar, open } = useSidebar()
-  const { userId } = useUser()
+  const { userId, clearUserId } = useUser()
   const [isDark, setIsDark] = useState(false)
   const [userName, setUserName] = useState('...')
 
   useEffect(() => {
+    if (!userId) return
     fetch(`/api/db-api/get-user/${userId}`)
       .then(r => r.ok ? r.json() : Promise.reject())
       .then(data => setUserName(data.name))
@@ -99,7 +101,7 @@ export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({
                   {navigationItems.map((item) => (
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton
-                        render={<Link to={item.href} />}
+                        render={<Link to={item.href} onClick={item.title === 'Log Out' ? clearUserId : undefined} />}
                         isActive={location.pathname === item.href}
                       >
                         <item.icon />

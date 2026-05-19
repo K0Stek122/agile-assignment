@@ -19,6 +19,7 @@ function AccountOptions() {
     const [error, setError] = useState<string | null>(null)
 
     const handleDeleteConfirm = async () => {
+        if (!userId) return
         setError(null)
         try {
             const res = await fetch(`/api/db-api/delete-user/${userId}`, { method: 'DELETE' })

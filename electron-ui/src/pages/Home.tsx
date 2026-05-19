@@ -13,6 +13,7 @@ function Home() {
   const [attendanceData, setAttendanceData] = useState<AttendanceEntry[]>([])
 
   useEffect(() => {
+    if (!userId) return
     fetch('/api/db-api/get-schedule')
       .then(r => r.ok ? r.json() : Promise.reject())
       .then((rows: [number, number, number, string][]) => {
