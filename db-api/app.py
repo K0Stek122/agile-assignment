@@ -225,6 +225,26 @@ def get_credit_card_by_user_id(user_id):
         'cvc': row[4]
     } for row in rows], 200
 
+@app.route('/api/db-api/update-user-membership/<int:user_id>', methods=['POST'])
+def update_user_membership(user_id):
+    membership_type = request.form.get('membership_type')
+
+    conn = get_db_connection()
+    if not conn:
+        return 'DB failure', 500
+    cur = conn.cursor()
+    cur.execute('UPDATE "User" SET "Membership type" = %s WHERE "User ID" = %s', (membership_type, user_id))
+    conn.commit()
+
+    rows_updated = cur.rowcount
+    cur.close()
+    conn.close()
+
+    if rows_updated == 0:
+        return 'User not found', 404
+    return 'Membership updated', 200
+
+
 @app.route('/api/db-api/delete-user/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
     conn = get_db_connection()

@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 5211
 
-CMD ["gunicorn", "--bind", "0.0.0.0:5431", "--workers", "4", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5211", "--workers", "4", "app:app"]
