@@ -11,7 +11,7 @@ CREATE TABLE "User Authentication" (
     "Authentication ID"     SERIAL PRIMARY KEY,
     "User ID"               INTEGER REFERENCES "User" ("User ID") NOT NULL,
     "Password"              TEXT NOT NULL
-)
+);
 
 CREATE TABLE "Schedule" (
     "ScheduleInstanceID"  SERIAL PRIMARY KEY,
